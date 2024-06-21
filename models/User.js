@@ -13,8 +13,8 @@ const userSchema = Schema(
     level: { type: String, required: true, default: 'public' }, // public || influencers
 
     // profile
-    profileImage: { type: String },
-    bio: { type: String },
+    profileImage: { type: String, default: '' },
+    bio: { type: String, default: '' },
 
     // follow
     followers: { type: [Schema.Types.ObjectId], ref: 'User' },
