@@ -6,27 +6,27 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const Schema = mongoose.Schema;
 
 const userSchema = Schema(
-    {
-        email: { type: String, required: true },
-        password: { type: String, required: true },
-        name: { type: String, required: true },
-        level: { type: String, required: true, default: "public" }, // public || influencers
-    },
-    { timestamps: true }
-)
+  {
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    name: { type: String, required: true },
+    level: { type: String, required: true, default: 'public' } // public || influencers
+  },
+  { timestamps: true }
+);
 
 // // toJSON 메서드 정의
 userSchema.methods.toJSON = function () {
-    const obj = this._doc;
-    delete obj.password
-    delete obj.__v
-    return obj;
-}
+  const obj = this._doc;
+  delete obj.password;
+  delete obj.__v;
+  return obj;
+};
 
 // 토큰 생성
 userSchema.methods.generateToken = function () {
-    const token = jwt.sign({ _id: this._id }, JWT_SECRET_KEY, { expiresIn: '1h' });
-    return token;
+  const token = jwt.sign({ _id: this._id }, JWT_SECRET_KEY, { expiresIn: '1h' });
+  return token;
 };
 
 // User 모델 생성
