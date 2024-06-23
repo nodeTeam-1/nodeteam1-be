@@ -1,4 +1,5 @@
 const Post = require('../models/Post');
+const User = require('../models/User');
 
 const postController = {};
 
@@ -89,6 +90,44 @@ postController.deletePost = async (req, res) => {
     if (!post.userId.equals(userId)) throw new Error('Unauthorized: You can only edit your own posts');
 
     await Post.deleteOne({ _id: postId });
+
+    return res.status(200).json({ status: 'success' });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+postController.createPostLike = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (user.postLike.includes(postId)) throw new Error('Post already liked by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { postLike: postId } }, { new: true });
+
+    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likeCount: 1 } }, { new: true });
+
+    return res.status(200).json({ status: 'success' });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+postController.deletePostLike = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (!user.postLike.includes(postId)) throw new Error('Post not liked by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $pull: { postLike: postId } }, { new: true });
+
+    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likeCount: -1 } }, { new: true });
 
     return res.status(200).json({ status: 'success' });
   } catch (error) {
