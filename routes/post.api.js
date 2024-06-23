@@ -21,9 +21,9 @@ router.put('/', authController.authenticate, postController.updatePost);
 router.delete('/:id', authController.authenticate, postController.deletePost);
 
 //NOTE - Post Like 생성
-router.post('/like', authController.authenticate, userController.createPostLike);
+router.post('/like/:id', authController.authenticate, userController.createPostLike);
 
 //NOTE - Post Like 삭제
-router.delete('/like', authController.authenticate, userController.deletePostLike);
+router.delete('/like/:id', authController.authenticate, userController.deletePostLike);
 
 module.exports = router;

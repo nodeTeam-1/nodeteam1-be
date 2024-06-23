@@ -121,7 +121,7 @@ userController.deleteFollow = async (req, res) => {
 
 userController.createPostLike = async (req, res) => {
   try {
-    const { postId } = req.body;
+    const postId = req.params.id;
     const { userId } = req;
 
     const user = await User.findById({ _id: userId });
@@ -140,7 +140,7 @@ userController.createPostLike = async (req, res) => {
 
 userController.deletePostLike = async (req, res) => {
   try {
-    const { postId } = req.body;
+    const postId = req.params.id;
     const { userId } = req;
 
     const user = await User.findById({ _id: userId });
