@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Post = require('../models/Post');
 const bcrypt = require('bcryptjs');
 
 const userController = {};
@@ -113,6 +114,44 @@ userController.deleteFollow = async (req, res) => {
     );
 
     return res.status(200).json({ status: 'success', user });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+userController.createPostLike = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (user.postLike.includes(postId)) throw new Error('Post already liked by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { postLike: postId } }, { new: true });
+
+    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likeCount: 1 } }, { new: true });
+
+    return res.status(200).json({ status: 'success' });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+userController.deletePostLike = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (!user.postLike.includes(postId)) throw new Error('Post not liked by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $pull: { postLike: postId } }, { new: true });
+
+    await Post.findOneAndUpdate({ _id: postId }, { $inc: { likeCount: -1 } }, { new: true });
+
+    return res.status(200).json({ status: 'success' });
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error.message });
   }
