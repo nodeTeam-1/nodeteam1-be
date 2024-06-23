@@ -3,7 +3,6 @@ const router = express.Router();
 
 const authController = require('../controllers/auth.controller');
 const postController = require('../controllers/post.controller');
-const userController = require('../controllers/user.controller');
 
 //NOTE - Post 전체
 router.get('/', postController.getPosts);
@@ -21,9 +20,9 @@ router.put('/', authController.authenticate, postController.updatePost);
 router.delete('/:id', authController.authenticate, postController.deletePost);
 
 //NOTE - Post Like 생성
-router.post('/like/:id', authController.authenticate, userController.createPostLike);
+router.post('/like/:id', authController.authenticate, postController.createPostLike);
 
 //NOTE - Post Like 삭제
-router.delete('/like/:id', authController.authenticate, userController.deletePostLike);
+router.delete('/like/:id', authController.authenticate, postController.deletePostLike);
 
 module.exports = router;
