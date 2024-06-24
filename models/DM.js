@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Message = require('./common/messageSchema');
+const Message = require('./common/Message');
 
 const dmSchema = new Schema(
   {
