@@ -7,6 +7,9 @@ const userController = require('../controllers/user.controller');
 //NOTE - 회원가입
 router.post('/register', userController.createUser);
 
+//NOTE - 인증번호 확인
+router.post('/verify', userController.verifyUser);
+
 //NOTE - 유저 정보
 router.get('/info', authController.authenticate, userController.getUser);
 
