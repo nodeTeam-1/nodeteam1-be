@@ -32,7 +32,19 @@ userController.createUser = async (req, res) => {
 userController.getUser = async (req, res) => {
   try {
     const { userId } = req;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId)
+      .populate('postLike')
+      //.populate('commentLike')
+      .populate('bookMark')
+      .populate({
+        path: 'followers',
+        select: 'name profileImage'
+      })
+      .populate({
+        path: 'followings',
+        select: 'name profileImage'
+      })
+      .exec();
 
     if (user) {
       return res.status(200).json({ status: 'success', user });
@@ -114,6 +126,40 @@ userController.deleteFollow = async (req, res) => {
     );
 
     return res.status(200).json({ status: 'success', user });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+userController.createBookmark = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (user.bookMark.includes(postId)) throw new Error('Post already bookmark by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $addToSet: { bookMark: postId } }, { new: true });
+
+    return res.status(200).json({ status: 'success' });
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+userController.deleteBookmark = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const { userId } = req;
+
+    const user = await User.findById({ _id: userId });
+
+    if (!user.bookMark.includes(postId)) throw new Error('Post not bookmark by user');
+
+    await User.findByIdAndUpdate({ _id: userId }, { $pull: { bookMark: postId } }, { new: true });
+
+    return res.status(200).json({ status: 'success' });
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error.message });
   }
