@@ -12,6 +12,11 @@ const userSchema = Schema(
     name: { type: String, required: true },
     level: { type: String, required: true, default: 'public' }, // public || influencers
 
+    // verification
+    isVerify: { type: Boolean, default: false },
+    verificationCode: { type: String, required: true },
+    timerId: { type: Object },
+
     // profile
     profileImage: { type: String, default: '' },
     bio: { type: String, default: '' },

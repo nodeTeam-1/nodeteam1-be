@@ -12,6 +12,8 @@ authController.loginWithEmail = async (req, res) => {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
     if (user) {
+      if (!user.isVerify) throw new Error('인증되지 않은 이메일입니다.');
+
       const isMatch = await bycript.compare(password, user.password);
       if (isMatch) {
         // token
@@ -49,7 +51,8 @@ authController.loginWithGoogle = async (req, res) => {
       user = new User({
         name,
         email,
-        password: newPassword
+        password: newPassword,
+        isVerify: true
       });
       await user.save();
     }
