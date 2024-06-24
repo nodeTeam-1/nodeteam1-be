@@ -16,4 +16,10 @@ router.put('/update/password', authController.authenticate, userController.updat
 //NOTE - 프로필 변경
 router.put('/update/profile', authController.authenticate, userController.updateProfile);
 
+//NOTE - 북마크 생성
+router.post('/bookmark/:id', authController.authenticate, userController.createBookmark);
+
+//NOTE - 북마크 생성
+router.delete('/bookmark/:id', authController.authenticate, userController.deleteBookmark);
+
 module.exports = router;
