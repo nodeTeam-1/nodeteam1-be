@@ -10,7 +10,7 @@ const userSchema = Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true },
-    level: { type: String, required: true, default: 'public' }, // public || influencers
+    level: { type: String, required: true, default: 'public' }, // public || influencer
 
     // verification
     isVerify: { type: Boolean, default: false },
