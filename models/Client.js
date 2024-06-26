@@ -9,6 +9,13 @@ const clientSchema = new Schema(
   { timestamps: true }
 );
 
+clientSchema.methods.toJSON = function () {
+  const obj = this._doc;
+  delete obj.__v;
+
+  return obj;
+};
+
 const Client = mongoose.model('Client', clientSchema);
 
 module.exports = Client;

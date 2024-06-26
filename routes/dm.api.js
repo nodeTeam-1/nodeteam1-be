@@ -4,7 +4,13 @@ const router = express.Router();
 const authController = require('../controllers/auth.controller');
 const dmController = require('../controllers/dm.controller');
 
-//NOTE - DM 보내기
+//NOTE - DM 조회
+router.get('/:id', authController.authenticate, dmController.getDM);
+
+//NOTE - DM 전송
 router.post('/', authController.authenticate, dmController.sendDM);
+
+//NOTE - DM 삭제
+router.delete('/', authController.authenticate, dmController.deleteDM);
 
 module.exports = router;

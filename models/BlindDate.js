@@ -16,6 +16,13 @@ const blindDateSchema = new Schema(
   }
 );
 
+blindDateSchema.methods.toJSON = function () {
+  const obj = this._doc;
+  delete obj.__v;
+
+  return obj;
+};
+
 // 사용자는 한개의 blindDate 를 가질수있다
 blindDateSchema.pre('save', async function (next) {
   const blindDate = this;
