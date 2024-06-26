@@ -102,7 +102,7 @@ userController.verifyUser = async (req, res) => {
 // 유저 정보 조회
 userController.getUser = async (req, res) => {
   try {
-      //.populate('commentLike')
+    //.populate('commentLike')
     const { userId } = req; // 요청에서 사용자 ID 추출
     const user = await User.findById(userId) // 사용자 ID로 조회
       .populate('postLike') // 포스트 좋아요 필드 populate
@@ -122,6 +122,36 @@ userController.getUser = async (req, res) => {
     }
 
     throw new Error('토큰이 유효하지 않습니다.');
+  } catch (error) {
+    res.status(400).json({ status: 'fail', error: error.message });
+  }
+};
+
+// 아이디로 유저 정보 조회
+userController.getProfile = async (req, res) => {
+  try {
+    // URL 파라미터에서 userId 추출
+    const userId = req.params.id;
+
+    const user = await User.findById(userId) // 사용자 ID로 조회
+      .populate('postLike') // 포스트 좋아요 필드 populate
+      .populate('bookMark') // 북마크 필드 populate
+      .populate({
+        path: 'followers',
+        select: 'name profileImage' // 팔로워 정보 필드 populate
+      })
+      .populate({
+        path: 'followings',
+        select: 'name profileImage' // 팔로잉 정보 필드 populate
+      })
+      .exec();
+
+    if (user) {
+      return res.status(200).json({ status: 'success', user });
+    }
+
+    // 사용자 정보가 없을 경우 에러 처리
+    throw new Error('해당 사용자 정보를 찾을 수 없습니다.');
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error.message });
   }
