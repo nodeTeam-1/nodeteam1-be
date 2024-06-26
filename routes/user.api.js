@@ -11,7 +11,7 @@ router.post('/register', userController.createUser);
 router.post('/verify', userController.verifyUser);
 
 //NOTE - 내 프로필 정보 조회
-router.get('/profile', authController.authenticate, userController.getUser);
+router.get('/profile', authController.authenticate, userController.getMyProfile);
 
 //NOTE - 아이디로 프로필 정보 조회
 router.get('/profile/:id', authController.authenticate, userController.getProfile);

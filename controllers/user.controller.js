@@ -99,8 +99,8 @@ userController.verifyUser = async (req, res) => {
   }
 };
 
-// 유저 정보 조회
-userController.getUser = async (req, res) => {
+// 내 프로필 정보 조회
+userController.getMyProfile = async (req, res) => {
   try {
     //.populate('commentLike')
     const { userId } = req; // 요청에서 사용자 ID 추출
@@ -127,7 +127,7 @@ userController.getUser = async (req, res) => {
   }
 };
 
-// 아이디로 유저 정보 조회
+// 아이디로 프로필 정보 조회
 userController.getProfile = async (req, res) => {
   try {
     // URL 파라미터에서 userId 추출
