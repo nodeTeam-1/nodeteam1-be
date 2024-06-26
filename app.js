@@ -5,6 +5,8 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const app = express();
 
+const Client = require('./models/Client');
+
 // cors, dotenv, bodyParser 설정
 app.use(cors());
 require('dotenv').config();
@@ -27,6 +29,28 @@ mongoose
 
 app.get('/', (req, res) => {
   res.send('nodeteam1: SNS Project');
+});
+
+global.clients = {};
+app.get('/events/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  // 응답 헤더 설정
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  // 클라이언트 연결 정보 저장
+  // const client = new Client({ userId, });
+  // await client.save();
+
+  global.clients[userId] = res;
+  console.log('sse 접속: ', userId);
+  req.on('close', async () => {
+    delete global.clients[userId];
+    await Client.deleteOne({ userId });
+    console.log(`Client ${userId} disconnected`);
+  });
 });
 
 const PORT = process.env.PORT || 5002;
