@@ -20,7 +20,7 @@ commentController.createComment = async (req, res) => {
 
     return res.status(200).json({ status: 'success', comment });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
@@ -35,15 +35,17 @@ commentController.getCommentsByPost = async (req, res) => {
 
     return res.status(200).json({ status: 'success', comments });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
 // 댓글 수정
 commentController.updateComment = async (req, res) => {
   try {
-    const { commentId } = req.params; // 요청 경로에서 댓글 ID 추출
-    const { content } = req.body; // 요청 본문에서 새로운 댓글 내용 추출
+    // 요청 경로에서 댓글 ID 추출
+    const { commentId } = req.params;
+    // 요청 본문에서 새로운 댓글 내용 추출
+    const { content } = req.body;
     const { userId } = req; // 인증된 사용자 ID
 
     // 댓글이 존재하는지 확인
@@ -55,20 +57,20 @@ commentController.updateComment = async (req, res) => {
 
     // 댓글 내용 업데이트 및 저장
     comment.content = content;
-    // 수정 시간 업데이트
-    comment.updatedAt = new Date();
+    comment.updatedAt = new Date(); // 수정 시간 업데이트
     await comment.save();
 
     return res.status(200).json({ status: 'success', comment });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
 // 댓글 삭제
 commentController.deleteComment = async (req, res) => {
   try {
-    const { commentId } = req.params; // 요청 경로에서 댓글 ID 추출
+    // 요청 경로에서 댓글 ID 추출
+    const { commentId } = req.params;
     const { userId } = req; // 인증된 사용자 ID
 
     // 댓글이 존재하는지 확인
@@ -83,15 +85,17 @@ commentController.deleteComment = async (req, res) => {
 
     return res.status(200).json({ status: 'success' });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
 // 대댓글 추가
 commentController.addReply = async (req, res) => {
   try {
-    const { commentId } = req.params; // 요청 경로에서 댓글 ID 추출
-    const { userId, content } = req.body; // 요청 본문에서 사용자 ID와 대댓글 내용 추출
+    // 요청 경로에서 댓글 ID 추출
+    const { commentId } = req.params;
+    // 요청 본문에서 사용자 ID와 대댓글 내용 추출
+    const { userId, content } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -109,15 +113,17 @@ commentController.addReply = async (req, res) => {
 
     return res.status(200).json({ status: 'success', comment });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
 // 대댓글 수정
 commentController.updateReply = async (req, res) => {
   try {
-    const { commentId, replyId } = req.params; // 요청 경로에서 댓글 ID와 대댓글 ID 추출
-    const { userId, content } = req.body; // 요청 본문에서 사용자 ID와 새로운 대댓글 내용 추출
+    // 요청 경로에서 댓글 ID와 대댓글 ID 추출
+    const { commentId, replyId } = req.params;
+    // 요청 본문에서 사용자 ID와 새로운 대댓글 내용 추출
+    const { userId, content } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -137,15 +143,16 @@ commentController.updateReply = async (req, res) => {
 
     return res.status(200).json({ status: 'success', comment });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
 // 대댓글 삭제
 commentController.deleteReply = async (req, res) => {
   try {
-    const { commentId, replyId } = req.params; // 요청 경로에서 댓글 ID와 대댓글 ID 추출
-    const { userId } = req; // 요청 본문에서 사용자 ID 추출
+    // 요청 경로에서 댓글 ID와 대댓글 ID 추출
+    const { commentId, replyId } = req.params;
+    const { userId } = req; // 인증된 사용자 ID
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -164,7 +171,7 @@ commentController.deleteReply = async (req, res) => {
 
     return res.status(200).json({ status: 'success', comment });
   } catch (error) {
-    res.status(400).json({ status: 'fail', error: error.message });
+    return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
 
