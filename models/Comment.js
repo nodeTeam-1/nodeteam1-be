@@ -9,7 +9,9 @@ const replySchema = new Schema(
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
   },
-  { _id: false }
+  {
+    timestamps: true
+  }
 );
 
 const commentSchema = new Schema(
