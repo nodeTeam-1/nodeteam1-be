@@ -42,13 +42,12 @@ commentController.getCommentsByPost = async (req, res) => {
 // 댓글 수정
 commentController.updateComment = async (req, res) => {
   try {
-    // 요청 경로에서 포스트 ID와 댓글 ID 추출
-    const { postId, id: commentId } = req.params;
+    const { commentId } = req.params; // 요청 경로에서 댓글 ID 추출
     const { content } = req.body; // 요청 본문에서 새로운 댓글 내용 추출
     const { userId } = req; // 인증된 사용자 ID
 
-    // 댓글과 해당 포스트가 일치하는지 확인
-    const comment = await Comment.findOne({ _id: commentId, postId });
+    // 댓글이 존재하는지 확인
+    const comment = await Comment.findById(commentId);
     if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
 
     // 댓글 작성자가 요청한 사용자와 일치하는지 확인
@@ -69,12 +68,11 @@ commentController.updateComment = async (req, res) => {
 // 댓글 삭제
 commentController.deleteComment = async (req, res) => {
   try {
-    // 요청 경로에서 포스트 ID와 댓글 ID 추출
-    const { postId, id: commentId } = req.params;
+    const { commentId } = req.params; // 요청 경로에서 댓글 ID 추출
     const { userId } = req; // 인증된 사용자 ID
 
-    // 댓글과 해당 포스트가 일치하는지 확인
-    const comment = await Comment.findOne({ _id: commentId, postId });
+    // 댓글이 존재하는지 확인
+    const comment = await Comment.findById(commentId);
     if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
 
     // 댓글 작성자가 요청한 사용자와 일치하는지 확인
@@ -147,7 +145,7 @@ commentController.updateReply = async (req, res) => {
 commentController.deleteReply = async (req, res) => {
   try {
     const { commentId, replyId } = req.params; // 요청 경로에서 댓글 ID와 대댓글 ID 추출
-    const { userId } = req.body; // 요청 본문에서 사용자 ID 추출
+    const { userId } = req; // 요청 본문에서 사용자 ID 추출
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
