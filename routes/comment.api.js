@@ -16,4 +16,13 @@ router.put('/:postId/:id', authController.authenticate, commentController.update
 // 댓글 삭제
 router.delete('/:postId/:id', authController.authenticate, commentController.deleteComment);
 
+// 대댓글 추가
+router.post('/:commentId/replies', authController.authenticate, commentController.addReply);
+
+// 대댓글 수정
+router.put('/:commentId/replies/:replyId', authController.authenticate, commentController.updateReply);
+
+// 대댓글 삭제
+router.delete('/:commentId/replies/:replyId', authController.authenticate, commentController.deleteReply);
+
 module.exports = router;
