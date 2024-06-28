@@ -10,7 +10,7 @@ router.get('/:id', authController.authenticate, dmController.getDM);
 //NOTE - DM 전송
 router.post('/', authController.authenticate, dmController.sendDM);
 
-//NOTE - DM 삭제
-router.delete('/', authController.authenticate, dmController.deleteDM);
+//NOTE - DM 삭제 - 숨기기
+router.put('/', authController.authenticate, dmController.deleteDM);
 
 module.exports = router;
