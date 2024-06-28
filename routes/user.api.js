@@ -10,6 +10,9 @@ router.post('/register', userController.createUser);
 //NOTE - 인증번호 확인
 router.post('/verify', userController.verifyUser);
 
+//NOTE - 전체 유저 리스트 조회
+router.get('/list', authController.authenticate, userController.getUserList)
+
 //NOTE - 내 프로필 정보 조회
 router.get('/profile', authController.authenticate, userController.getMyProfile);
 

@@ -19,7 +19,8 @@ authController.loginWithEmail = async (req, res) => {
         // token
         const token = await user.generateToken();
 
-        return res.status(200).json({ status: 'success', user, token });
+        console.log('email Login');
+        return res.status(200).json({ status: 'email Login success', user, token });
       } else {
         throw new Error('비밀번호와 이메일이 유효하지 않습니다.');
       }

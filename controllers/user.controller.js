@@ -99,6 +99,23 @@ userController.verifyUser = async (req, res) => {
   }
 };
 
+userController.getUserList = async (req, res) => {
+  try {
+    // const { userId } = req; // 요청에서 사용자 ID 추출
+    const user = await User.find() // 사용자 전체 조회
+      .select('name profileImage bio') // user 이름, 프로필 사진, 자기소개 필드 select
+      .exec();
+
+    if (user) {
+      return res.status(200).json({ status: 'success', user });
+    }
+
+    throw new Error('토큰이 유효하지 않습니다.');
+  }catch (err) {
+    res.status(400).json({ status: 'fail', error: err, message: err.message });
+  }
+}
+
 // 내 프로필 정보 조회
 userController.getMyProfile = async (req, res) => {
   try {
