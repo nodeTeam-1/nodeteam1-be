@@ -9,7 +9,7 @@ const dmSchema = new Schema(
   },
   {
     timestamps: true,
-    _id: false
+    // _id: false
   }
 );
 

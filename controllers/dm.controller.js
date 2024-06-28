@@ -1,4 +1,5 @@
 const DM = require('../models/DM');
+const User = require('../models/User');
 
 const dmController = {};
 
@@ -7,7 +8,7 @@ dmController.getDM = async (req, res) => {
     const reciveId = req.params.id;
     const { userId } = req;
 
-    const dm = await DM.findOne({ users: { $all: [userId, reciveId] } })
+    let dm = await DM.findOne({ users: { $all: [userId, reciveId] } })
       .populate('users', 'name profileImage bio')
       .populate('messages.userId', 'name');
 
@@ -15,8 +16,10 @@ dmController.getDM = async (req, res) => {
       dm = new DM({ users: [userId, reciveId], messages: [] });
     }
 
+    console.log('getDM Success');
     return res.status(200).json({ status: 'success', dm });
   } catch (error) {
+    console.log('getDM Fail');
     res.status(400).json({ status: 'fail', error: error.message });
   }
 };
@@ -36,8 +39,10 @@ dmController.sendDM = async (req, res) => {
     dm.messages.push(newMessage);
     await dm.save();
 
+    const user = await User.findById(userId);
+
     if (global.clients[reciveId]) {
-      await global.clients[reciveId].write(`data: ${JSON.stringify({ message, sendId: userId })}\n\n`);
+      await global.clients[reciveId].write(`data: ${JSON.stringify({ message, userId: { _id: user._id, name: user.name } })}\n\n`);
       console.log(`reciveId: ${reciveId}\nmessage: ${message}`);
     }
 
