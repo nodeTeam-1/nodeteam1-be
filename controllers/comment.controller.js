@@ -45,8 +45,8 @@ commentController.updateComment = async (req, res) => {
     // 요청 경로에서 댓글 ID 추출
     const { commentId } = req.params;
     // 요청 본문에서 새로운 댓글 내용 추출
+    const { userId } = req;
     const { content } = req.body;
-    const { userId } = req; // 인증된 사용자 ID
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -123,7 +123,8 @@ commentController.updateReply = async (req, res) => {
     // 요청 경로에서 댓글 ID와 대댓글 ID 추출
     const { commentId, replyId } = req.params;
     // 요청 본문에서 사용자 ID와 새로운 대댓글 내용 추출
-    const { userId, content } = req.body;
+    const { userId } = req;
+    const { content } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -138,7 +139,6 @@ commentController.updateReply = async (req, res) => {
 
     // 대댓글 내용 업데이트 및 저장
     reply.content = content;
-    reply.updatedAt = new Date(); // 수정 시간 업데이트
     await comment.save();
 
     return res.status(200).json({ status: 'success', comment });
