@@ -1,24 +1,23 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
+const messageSchemaFields = require('./common/Message').obj;
 
+// 대댓글
 const replySchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    content: { type: String, required: true },
-    likeCount: { type: Number, default: 0 },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    ...messageSchemaFields,
+    likeCount: { type: Number, default: 0 }
   },
   {
     timestamps: true
   }
 );
 
+// 댓글
 const commentSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    ...messageSchemaFields,
     postId: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-    content: { type: String, required: true },
     replies: [replySchema],
     likeCount: { type: Number, default: 0 }
   },
@@ -30,7 +29,6 @@ const commentSchema = new Schema(
 commentSchema.methods.toJSON = function () {
   const obj = this._doc;
   delete obj.__v;
-
   return obj;
 };
 

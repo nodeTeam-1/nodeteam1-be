@@ -9,7 +9,7 @@ const messageSchema = new Schema(
     originMessage: { type: String, default: '' }
   },
   {
-    timestamp: true
+    timestamps: true
   }
 );
 
@@ -17,7 +17,6 @@ messageSchema.methods.toJSON = function () {
   const obj = this._doc;
   delete obj.originMessage;
   delete obj.__v;
-
   return obj;
 };
 
