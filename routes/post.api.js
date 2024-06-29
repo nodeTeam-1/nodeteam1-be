@@ -7,8 +7,11 @@ const postController = require('../controllers/post.controller');
 //NOTE - Post 전체
 router.get('/', postController.getPosts);
 
+//NOTE - Post 아이디별 조회
+router.get('/:id', postController.getPostsId);
+
 //NOTE - Post 상세
-router.get('/:id', postController.getPostDetail);
+router.get('/detail/:id', postController.getPostDetail);
 
 //NOTE - Post 등록
 router.post('/', authController.authenticate, postController.createPost);
