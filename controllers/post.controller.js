@@ -11,7 +11,7 @@ postController.getPosts = async (req, res) => {
       ...(name && { name: { $regex: name, $options: 'i' } })
     };
 
-    let query = Post.find(condition).populate('userId', 'name');
+    let query = Post.find(condition).populate('userId', 'name profileImage bio');
     let response = { status: 'success' };
 
     if (page) {
@@ -38,7 +38,7 @@ postController.getPostDetail = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const post = await Post.findOne({ _id: postId }).populate('userId', 'name');
+    const post = await Post.findOne({ _id: postId }).populate('userId', 'name profileImage bio');
 
     return res.status(200).json({ status: 'success', post });
   } catch (error) {
