@@ -7,7 +7,7 @@ const commentController = {};
 commentController.createComment = async (req, res) => {
   try {
     // 요청 본문에서 포스트 ID와 댓글 내용을 추출
-    const { postId, content } = req.body;
+    const { postId, message } = req.body;
     const { userId } = req; // 인증된 사용자 ID
 
     // 포스트가 존재하는지 확인
@@ -15,7 +15,7 @@ commentController.createComment = async (req, res) => {
     if (!post) throw new Error('포스트를 찾을 수 없습니다.');
 
     // 새로운 댓글 생성 및 저장
-    const comment = new Comment({ postId, userId, content });
+    const comment = new Comment({ postId, userId, message });
     await comment.save();
 
     return res.status(200).json({ status: 'success', comment });
@@ -46,7 +46,7 @@ commentController.updateComment = async (req, res) => {
     const { commentId } = req.params;
     // 요청 본문에서 새로운 댓글 내용 추출
     const { userId } = req;
-    const { content } = req.body;
+    const { message } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -56,7 +56,7 @@ commentController.updateComment = async (req, res) => {
     if (!comment.userId.equals(userId)) throw new Error('권한 없음: 자신의 댓글만 수정할 수 있습니다.');
 
     // 댓글 내용 업데이트 및 저장
-    comment.content = content;
+    comment.message = message;
     comment.updatedAt = new Date(); // 수정 시간 업데이트
     await comment.save();
 
@@ -95,7 +95,7 @@ commentController.addReply = async (req, res) => {
     // 요청 경로에서 댓글 ID 추출
     const { commentId } = req.params;
     // 요청 본문에서 사용자 ID와 대댓글 내용 추출
-    const { userId, content } = req.body;
+    const { userId, message } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -104,7 +104,7 @@ commentController.addReply = async (req, res) => {
     // 새로운 대댓글 생성 및 추가
     const reply = {
       userId,
-      content,
+      message,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -124,7 +124,7 @@ commentController.updateReply = async (req, res) => {
     const { commentId, replyId } = req.params;
     // 요청 본문에서 사용자 ID와 새로운 대댓글 내용 추출
     const { userId } = req;
-    const { content } = req.body;
+    const { message } = req.body;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);
@@ -138,7 +138,7 @@ commentController.updateReply = async (req, res) => {
     if (!reply.userId.equals(userId)) throw new Error('권한 없음: 자신의 대댓글만 수정할 수 있습니다.');
 
     // 대댓글 내용 업데이트 및 저장
-    reply.content = content;
+    reply.message = message;
     await comment.save();
 
     return res.status(200).json({ status: 'success', comment });
