@@ -11,7 +11,7 @@ postController.getPosts = async (req, res) => {
       ...(name && { name: { $regex: name, $options: 'i' } })
     };
 
-    let query = Post.find(condition).populate('userId', 'name').sort({ createdAt: -1 });
+    let query = Post.find(condition).populate('userId', 'name profileImage bio').sort({ createdAt: -1 });
     let response = { status: 'success' };
 
     if (page) {
@@ -38,7 +38,7 @@ postController.getPosts = async (req, res) => {
 postController.getPostsId = async (req, res) => {
   try {
     const postId = req.params.id; // 파라미터에서 postId 가져옴
-    const post = await Post.findById(postId).populate('userId', 'name'); // postId로 포스트 조회
+    const post = await Post.findById(postId).populate('userId', 'name profileImage bio'); // postId로 포스트 조회
 
     if (!post) {
       return res.status(404).json({ status: 'fail', message: 'Post not found' });
