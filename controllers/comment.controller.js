@@ -31,7 +31,9 @@ commentController.getCommentsByPost = async (req, res) => {
     const postId = req.params.postId;
 
     // 해당 포스트의 모든 댓글을 조회 및 사용자 이름 포함
-    const comments = await Comment.find({ postId }).populate('userId', 'name profileImage');
+    const comments = await Comment.find({ postId })
+      .populate('userId', 'name profileImage')
+      .populate('replies.userId', 'name profileImage');
 
     return res.status(200).json({ status: 'success', comments });
   } catch (error) {
