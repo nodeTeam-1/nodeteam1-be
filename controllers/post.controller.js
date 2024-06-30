@@ -37,18 +37,38 @@ postController.getPosts = async (req, res) => {
 // 포스트 ID별 가져오기
 postController.getPostsId = async (req, res) => {
   try {
+    // 페이지/페이지 크기 값(기본 1) 가져오기
+    const { page, pageSize = 1 } = req.query;
     const userId = req.params.id;
-    const postList = await Post.find(userId).populate('userId', 'name profileImage bio');
 
-    if (!postList) {
-      return res.status(404).json({ status: 'fail', message: 'Post not found' });
+    // userId를 조건으로 설정
+    const condition = { userId };
+
+    // 조건에 맞는 포스트를 찾고 userId 필드를 이름, 프로필 이미지, bio로 채우기
+    let query = Post.find(condition).populate('userId', 'name profileImage bio').sort({ createdAt: -1 });
+    let response = { status: 'success' };
+
+    if (page) {
+      // 페이지가 있을 경우, 페이징 처리
+      query.skip((page - 1) * pageSize).limit(pageSize);
+
+      // 총 아이템 수와 총 페이지 수 계산
+      const totalItemNum = await Post.find(condition).count();
+      const totalPageNum = Math.ceil(totalItemNum / pageSize);
+      response.totalItemNum = totalItemNum;
+      response.totalPageNum = totalPageNum;
     }
 
-    return res.status(200).json({ status: 'success', data: postList });
+    // 쿼리 실행하여 포스트 목록 가져오기
+    const postList = await query.exec();
+    response.data = postList;
+
+    return res.status(200).json(response);
   } catch (error) {
     return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
+
 
 // 포스트 상세 가져오기
 postController.getPostDetail = async (req, res) => {
