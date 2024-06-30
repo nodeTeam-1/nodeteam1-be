@@ -199,10 +199,24 @@ userController.updateProfile = async (req, res) => {
     const { profileImage, bio } = req.body;
     const { userId } = req;
 
-    // 사용자 ID로 유저 정보 업데이트
-    const user = await User.findByIdAndUpdate({ _id: userId }, { profileImage, bio }, { new: true });
+    let updateProfileImage;
+    let updateBio;
 
-    return res.status(200).json({ status: 'success', user });
+    // profileImage, bio 둘 중 하나라도 정보가 없다면 사용자의 기존 정보 불러오기
+    if(!profileImage || !bio) {
+      const user = await User.findById(userId);
+
+      profileImage ? updateProfileImage = profileImage : updateProfileImage = user.profileImage;
+      bio ? updateBio = bio : updateBio = user.bio;
+    }else {
+      updateProfileImage = profileImage;
+      updateBio = bio;
+    }
+
+    // 사용자 ID로 유저 정보 업데이트
+    const newUser = await User.findByIdAndUpdate({ _id: userId }, { profileImage: updateProfileImage, bio: updateBio }, { new: true });
+
+    return res.status(200).json({ status: 'success', user: newUser });
   } catch (error) {
     res.status(400).json({ status: 'fail', error: error.message });
   }
