@@ -37,14 +37,14 @@ postController.getPosts = async (req, res) => {
 // 포스트 ID별 가져오기
 postController.getPostsId = async (req, res) => {
   try {
-    const postId = req.params.id; // 파라미터에서 postId 가져옴
-    const post = await Post.findById(postId).populate('userId', 'name profileImage bio'); // postId로 포스트 조회
+    const userId = req.params.id;
+    const postList = await Post.find(userId).populate('userId', 'name profileImage bio');
 
-    if (!post) {
+    if (!postList) {
       return res.status(404).json({ status: 'fail', message: 'Post not found' });
     }
 
-    return res.status(200).json({ status: 'success', data: post });
+    return res.status(200).json({ status: 'success', data: postList });
   } catch (error) {
     return res.status(400).json({ status: 'fail', error: error.message });
   }
