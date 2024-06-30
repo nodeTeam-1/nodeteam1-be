@@ -95,7 +95,8 @@ commentController.addReply = async (req, res) => {
     // 요청 경로에서 댓글 ID 추출
     const { commentId } = req.params;
     // 요청 본문에서 사용자 ID와 대댓글 내용 추출
-    const { userId, message } = req.body;
+    const { message } = req.body;
+    const { userId } = req;
 
     // 댓글이 존재하는지 확인
     const comment = await Comment.findById(commentId);

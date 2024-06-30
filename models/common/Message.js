@@ -5,7 +5,7 @@ const messageSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     message: { type: String, required: true },
-    messageIndex: { type: Number, required: true },
+    messageIndex: { type: Number },
     isDeleted: { type: Boolean, default: false },
     originMessage: { type: String, default: '' }
   },
