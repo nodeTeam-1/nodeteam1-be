@@ -15,14 +15,15 @@ postController.getPosts = async (req, res) => {
     let response = { status: 'success' };
 
     if (page) {
-      // limit 몇개를 보낼지
-      // skip 몇개를 건더뛰고 보여줄건지
-      query.skip((page - 1) * pageSize).limit(pageSize);
+      query.limit(page * pageSize);
 
-      // 최종 몇개 페이지인지
       const totalItemNum = await Post.find(condition).count();
       const totalPageNum = Math.ceil(totalItemNum / pageSize);
       response.totalPageNum = totalPageNum;
+
+      const items = await Post.find(condition).limit(page * pageSize);
+
+      response.items = items;
     }
 
     const postList = await query.exec();
@@ -68,7 +69,6 @@ postController.getPostsId = async (req, res) => {
     return res.status(400).json({ status: 'fail', error: error.message });
   }
 };
-
 
 // 포스트 상세 가져오기
 postController.getPostDetail = async (req, res) => {
